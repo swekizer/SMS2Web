@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 // Import required packages
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
@@ -5,12 +8,12 @@ const path = require('path');
 
 // Create Express app
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Initialize Supabase client (server-side - secure!)
 const supabase = createClient(
-  'https://exgcokfpizcekvkevkix.supabase.co',
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4Z2Nva2ZwaXpjZWt2a2V2a2l4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTU0NTk2MSwiZXhwIjoyMDY3MTIxOTYxfQ.Mzn3pmJpR5MzLJJ06p552h8ckzMMgNUSjOP6W14Luu4'
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
 );
 
 // Middleware

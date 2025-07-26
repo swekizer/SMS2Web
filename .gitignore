@@ -1,15 +1,17 @@
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Node.js
+# Dependencies
 node_modules/
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Logs
-logs
-*.log
 
 # Runtime data
 pids
@@ -20,8 +22,12 @@ pids
 # Coverage directory used by tools like istanbul
 coverage/
 
+# nyc test coverage
+.nyc_output
+
 # Dependency directories
 node_modules/
+jspm_packages/
 
 # Optional npm cache directory
 .npm
@@ -37,5 +43,18 @@ node_modules/
 
 # dotenv environment variables file
 .env
-.env.test
-.env.production 
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
