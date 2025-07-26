@@ -1,52 +1,45 @@
-// Load environment variables
-require('dotenv').config();
-
-// Import required packages
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 
-// Create Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Initialize Supabase client (server-side - secure!)
+// Initialize Supabase client
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
 // Security middleware
-app.use(helmet()); // Adds security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+}));
+
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://sms-2-web.vercel.app'] // Remove trailing slash
+    ? ['https://sms-2-web.vercel.app']
     : ['http://localhost:3000'],
   credentials: true
-})); // Allows cross-origin requests
-app.use(express.json()); // Parse JSON bodies
+}));
 
-// Rate limiting to prevent abuse
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use('/api/', limiter);
+app.use(express.json());
 
-// Serve static files from public directory
-app.use(express.static('public'));
+// Serve static files
+app.use(express.static(path.join(__dirname, '../public')));
 
-// API Routes - These replace direct client-side database access
-
-// GET /api/sms - Fetch all SMS messages
+// API Routes
 app.get('/api/sms', async (req, res) => {
   try {
     console.log('Fetching SMS messages...');
-    console.log('Supabase URL:', process.env.SUPABASE_URL ? 'Set' : 'Missing');
-    console.log('Service Key:', process.env.SUPABASE_SERVICE_KEY ? 'Set' : 'Missing');
     
     const { data, error } = await supabase
       .from('sms')
@@ -67,12 +60,10 @@ app.get('/api/sms', async (req, res) => {
   }
 });
 
-// POST /api/sms - Create new SMS message
 app.post('/api/sms', async (req, res) => {
   try {
     const { sender, message } = req.body;
     
-    // Basic validation
     if (!sender || !message) {
       return res.status(400).json({ error: 'Sender and message are required' });
     }
@@ -93,7 +84,6 @@ app.post('/api/sms', async (req, res) => {
       return res.status(500).json({ error: 'Failed to create message' });
     }
 
-    console.log('Created new message:', data[0]);
     res.status(201).json({ message: 'Message created successfully', data: data[0] });
   } catch (error) {
     console.error('Server error:', error);
@@ -101,7 +91,6 @@ app.post('/api/sms', async (req, res) => {
   }
 });
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -110,15 +99,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve the main page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Serve the main page for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log('🚀 SMS2Web Server Started!');
-  console.log(`📱 Frontend: http://localhost:${PORT}`);
-  console.log(`🔌 API: http://localhost:${PORT}/api/sms`);
-  console.log(`💚 Health: http://localhost:${PORT}/api/health`);
-}); 
+// Export for Vercel
+module.exports = app; 
