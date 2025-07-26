@@ -21,7 +21,12 @@ const supabase = createClient(
 
 // Security middleware
 app.use(helmet()); // Adds security headers
-app.use(cors()); // Allows cross-origin requests
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://sms-2-web.vercel.app/'] // Replace with your actual domain
+    : ['http://localhost:3000'],
+  credentials: true
+})); // Allows cross-origin requests
 app.use(express.json()); // Parse JSON bodies
 
 // Rate limiting to prevent abuse
