@@ -1,18 +1,20 @@
 # SMS2Web - Real-time SMS Viewer
 
-A simple, MVP web application that displays SMS messages from a Supabase database in real-time.
+A simple web application that displays SMS messages from a Supabase database in real-time.
 
 ## Features
 
-- **Real-time Updates**: Messages appear instantly when added to the database
+- **Real-time Updates**: Messages appear automatically every 5 seconds
 - **Clean UI**: Simple, responsive design
-- **Status Indicator**: Shows real-time connection status
+- **Manual Refresh**: Button to manually refresh messages
+- **Secure Backend**: Express.js server with Supabase integration
 
 ## How it Works
 
-1. **Frontend**: Pure HTML/CSS/JavaScript (no frameworks)
-2. **Database**: Supabase PostgreSQL table named `sms`
-3. **Real-time**: Uses Supabase's real-time subscriptions
+1. **Android App**: Runs on mobile phone, reads SMS and sends to Supabase
+2. **Backend**: Express.js server fetches SMS from Supabase
+3. **Frontend**: Pure HTML/CSS/JavaScript displays messages
+4. **Real-time**: Polling every 5 seconds for new messages
 
 ## Database Schema
 
@@ -24,19 +26,38 @@ The `sms` table should have these columns:
 
 ## Setup
 
-1. Open `index.html` in a web browser
-2. View real-time SMS messages
+1. Replace Supabase credentials in `server.js`:
+   ```javascript
+   const supabase = createClient(
+     'YOUR_SUPABASE_URL_HERE',
+     'YOUR_SUPABASE_SERVICE_KEY_HERE'
+   );
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the server:
+   ```bash
+   npm start
+   ```
+
+4. Open http://localhost:3000 in your browser
 
 ## Technical Highlights
 
-- **Supabase Real-time**: Uses PostgreSQL's LISTEN/NOTIFY for instant updates
-- **Event-driven**: Listens to INSERT, UPDATE, DELETE events
-- **Error Handling**: Graceful error handling and status indicators
+- **Express.js Backend**: Simple REST API for SMS fetching
+- **Supabase Integration**: Secure database access
+- **Real-time Polling**: Automatic message updates every 5 seconds
+- **Clean Architecture**: Separation of concerns between frontend and backend
 - **XSS Protection**: HTML escaping for user content
 
 ## Interview Talking Points
 
-- **Simplicity**: No complex frameworks, easy to understand
-- **Real-time**: Demonstrates modern web capabilities
+- **Two-part System**: Android app + Web viewer architecture
+- **Real-time Updates**: Demonstrates modern web capabilities
 - **Database Integration**: Shows practical Supabase usage
-- **User Experience**: Status indicators and responsive design 
+- **Clean Code**: Simple, maintainable Express.js backend
+- **User Experience**: Responsive design with real-time feel 

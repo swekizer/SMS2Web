@@ -1,46 +1,25 @@
-// Load environment variables
-require('dotenv').config();
-
 // Import required packages
 const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 
 // Create Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Initialize Supabase client (server-side - secure!)
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
+  'https://exgcokfpizcekvkevkix.supabase.co',
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4Z2Nva2ZwaXpjZWt2a2V2a2l4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTU0NTk2MSwiZXhwIjoyMDY3MTIxOTYxfQ.Mzn3pmJpR5MzLJJ06p552h8ckzMMgNUSjOP6W14Luu4'
 );
 
-// Security middleware
-app.use(helmet()); // Adds security headers
-app.use(cors()); // Allows cross-origin requests
+// Middleware
 app.use(express.json()); // Parse JSON bodies
-
-// Rate limiting to prevent abuse
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use('/api/', limiter);
-
-// Serve static files from public directory
-app.use(express.static('public'));
-
-// API Routes - These replace direct client-side database access
+app.use(express.static('public')); // Serve static files
 
 // GET /api/sms - Fetch all SMS messages
 app.get('/api/sms', async (req, res) => {
   try {
-    console.log('Fetching SMS messages...');
-    
     const { data, error } = await supabase
       .from('sms')
       .select('*')
@@ -52,55 +31,11 @@ app.get('/api/sms', async (req, res) => {
       return res.status(500).json({ error: 'Failed to fetch messages' });
     }
 
-    console.log(`Fetched ${data?.length || 0} messages`);
     res.json({ messages: data || [] });
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
-
-// POST /api/sms - Create new SMS message
-app.post('/api/sms', async (req, res) => {
-  try {
-    const { sender, message } = req.body;
-    
-    // Basic validation
-    if (!sender || !message) {
-      return res.status(400).json({ error: 'Sender and message are required' });
-    }
-
-    const newMessage = {
-      sender: sender.trim(),
-      message: message.trim(),
-      timestamp: new Date().toISOString()
-    };
-
-    const { data, error } = await supabase
-      .from('sms')
-      .insert([newMessage])
-      .select();
-
-    if (error) {
-      console.error('Database error:', error);
-      return res.status(500).json({ error: 'Failed to create message' });
-    }
-
-    console.log('Created new message:', data[0]);
-    res.status(201).json({ message: 'Message created successfully', data: data[0] });
-  } catch (error) {
-    console.error('Server error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    timestamp: new Date().toISOString(),
-    message: 'SMS2Web API is running'
-  });
 });
 
 // Serve the main page
@@ -113,5 +48,4 @@ app.listen(PORT, () => {
   console.log('🚀 SMS2Web Server Started!');
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔌 API: http://localhost:${PORT}/api/sms`);
-  console.log(`💚 Health: http://localhost:${PORT}/api/health`);
 }); 

@@ -1,21 +1,15 @@
-// API Configuration - No more exposed API keys!
+// API Configuration
 const API_BASE_URL = '/api';
 
-// Global state
-let isConnected = false;
-
-function initializeConnection() {
+function initializeApp() {
   fetchSMS();
   setupPolling();
-  updateStatusIndicator('connecting');
 }
 
 function setupPolling() {
-  // Poll for new messages every 5 seconds instead of real-time
+  // Poll for new messages every 5 seconds for real-time feel
   setInterval(() => {
-    if (isConnected) {
-      fetchSMS();
-    }
+    fetchSMS();
   }, 5000);
 }
 
@@ -29,11 +23,10 @@ function fetchSMS() {
     })
     .then(data => {
       updateSMSList(data.messages || []);
-      updateStatusIndicator('connected');
     })
     .catch(error => {
       console.error('Error fetching SMS:', error);
-      updateStatusIndicator('error');
+      showError('Failed to load messages');
     });
 }
 
@@ -62,30 +55,9 @@ function manualRefresh() {
   fetchSMS();
 }
 
-function updateStatusIndicator(status) {
-  const indicator = document.getElementById("status-indicator");
-  
-  switch(status) {
-    case 'connected':
-      indicator.textContent = "API: Connected ✓";
-      indicator.className = "status-indicator status-online";
-      isConnected = true;
-      break;
-    case 'connecting':
-      indicator.textContent = "API: Connecting...";
-      indicator.className = "status-indicator status-offline";
-      isConnected = false;
-      break;
-    case 'error':
-      indicator.textContent = "API: Error ✗";
-      indicator.className = "status-indicator status-offline";
-      isConnected = false;
-      break;
-    default:
-      indicator.textContent = "API: Disconnected ✗";
-      indicator.className = "status-indicator status-offline";
-      isConnected = false;
-  }
+function showError(message) {
+  const list = document.getElementById("sms-list");
+  list.innerHTML = `<div class='sms-item error'>${message}</div>`;
 }
 
 function escapeHtml(text) {
@@ -103,17 +75,7 @@ function formatTime(timestamp) {
   }
 }
 
-// Test API connection on page load
+// Initialize app on page load
 document.addEventListener('DOMContentLoaded', function() {
-  // Test if API is available
-  fetch(`${API_BASE_URL}/health`)
-    .then(response => response.json())
-    .then(data => {
-      console.log('API Health Check:', data);
-      initializeConnection();
-    })
-    .catch(error => {
-      console.error('API not available:', error);
-      updateStatusIndicator('error');
-    });
+  initializeApp();
 });
