@@ -28,7 +28,6 @@ function fetchSMS() {
       return response.json();
     })
     .then(data => {
-      console.log('API Response:', data);
       updateSMSList(data.messages || []);
       updateStatusIndicator('connected');
     })
@@ -97,12 +96,6 @@ function escapeHtml(text) {
 
 function formatTime(timestamp) {
   try {
-    // Handle Unix timestamp (milliseconds)
-    if (typeof timestamp === 'number' && timestamp > 1000000000000) {
-      const date = new Date(timestamp);
-      return date.toLocaleString();
-    }
-    // Handle ISO string or other formats
     const date = new Date(timestamp);
     return date.toLocaleString();
   } catch {
@@ -123,4 +116,4 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('API not available:', error);
       updateStatusIndicator('error');
     });
-}); 
+});
