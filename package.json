@@ -2,10 +2,10 @@
   "name": "sms2web",
   "version": "1.0.0",
   "description": "Secure SMS viewer with Express backend",
-  "main": "api/index.js",
+  "main": "api/sms.js",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "nodemon api/index.js",
+    "start": "node api/sms.js",
+    "dev": "nodemon api/sms.js",
     "build": "echo 'No build step required'"
   },
   "dependencies": {
