@@ -8,7 +8,7 @@ const supabase = createClient(
 
 module.exports = async (req, res) => {
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', 'https://sms-2-gqmqcneaa-swekit-patels-projects.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', 'https://sms-2-q9ljvi2qs-swekit-patels-projects.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 

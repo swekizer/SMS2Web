@@ -123,4 +123,4 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('API not available:', error);
       updateStatusIndicator('error');
     });
-});
+}); 
