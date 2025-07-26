@@ -23,7 +23,7 @@ const supabase = createClient(
 app.use(helmet()); // Adds security headers
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://sms-2-web.vercel.app/'] // Replace with your actual domain
+    ? ['https://sms-2-web.vercel.app'] // Remove trailing slash
     : ['http://localhost:3000'],
   credentials: true
 })); // Allows cross-origin requests
@@ -45,6 +45,8 @@ app.use(express.static('public'));
 app.get('/api/sms', async (req, res) => {
   try {
     console.log('Fetching SMS messages...');
+    console.log('Supabase URL:', process.env.SUPABASE_URL ? 'Set' : 'Missing');
+    console.log('Service Key:', process.env.SUPABASE_SERVICE_KEY ? 'Set' : 'Missing');
     
     const { data, error } = await supabase
       .from('sms')
@@ -54,14 +56,14 @@ app.get('/api/sms', async (req, res) => {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(500).json({ error: 'Failed to fetch messages' });
+      return res.status(500).json({ error: 'Failed to fetch messages', details: error.message });
     }
 
     console.log(`Fetched ${data?.length || 0} messages`);
     res.json({ messages: data || [] });
   } catch (error) {
     console.error('Server error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
