@@ -1,4 +1,4 @@
-const API_URL = "https://sms2web.onrender.com//sms";
+const API_URL = "https://sms2web.onrender.com/sms";
 
 async function fetchData() {
     try {
