@@ -1,9 +1,6 @@
 package com.swekit.backend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +13,11 @@ public class Sms {
     private LocalDateTime receivedAt;
     private String sender;
     private String message;
+
+    @ManyToOne
+    @JoinColumn(name = "user_user_id")
+    private User user;
+
 
     public Sms(){
     }
@@ -56,6 +58,14 @@ public class Sms {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 
