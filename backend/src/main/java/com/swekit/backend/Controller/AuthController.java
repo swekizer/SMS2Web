@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "https://sms-2-web.vercel.app/")
+@CrossOrigin(origins = {"https://sms-2-web.vercel.app/", "https://sms2web.onrender.com/"})
 
 @RestController
 public class AuthController {
