@@ -2,7 +2,11 @@ package com.swekit.backend.Controller;
 
 import com.swekit.backend.Model.Sms;
 import com.swekit.backend.Model.SmsRequest;
+import com.swekit.backend.Model.User;
+import com.swekit.backend.Repository.UserRepository;
 import com.swekit.backend.Service.SmsService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,25 +17,37 @@ import java.util.List;
 public class SmsController {
 
     private final SmsService smsService;
+    private final UserRepository userRepository;
 
-    public SmsController(SmsService smsService){
+    public SmsController(SmsService smsService, UserRepository userRepository){
         this.smsService = smsService;
+        this.userRepository = userRepository;
     }
+
 
 
     @GetMapping("/sms")
     public List<Sms> sms(){
-        return smsService.allSms();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+        return smsService.allSms(currentUser);
     }
 
 
     @DeleteMapping("/sms/{id}")
     public void deleteSms(@PathVariable int id){
-        smsService.deleteSms(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+        smsService.deleteSms(currentUser, id);
     }
 
     @PostMapping("/sms")
     public Sms addSms(@RequestBody SmsRequest smsRequest){
-        return smsService.addSms(smsRequest);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+        return smsService.addSms(smsRequest, currentUser);
     }
 }

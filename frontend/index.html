@@ -5,13 +5,40 @@
     <title>SMS2Web</title>
 </head>
 <body>
-    <h1>I don't have portfolio website 😭</h1>
+
     <h1>Read your SMS from anywhere</h1>
     <br>
+
+
+    <div>
+        <h3>Register</h3>
+        <label>Email</label>
+        <input id="emailRegister">
+
+        <label>Password</label>
+        <input id="passwordRegister">
+        <button onclick="register()">Register</button>
+    </div>
+
+
+    <div>
+        <h3>Login</h3>
+        <label>Email</label>
+        <input id="emailLogin">
+
+        <label>Password</label>
+        <input id="passwordLogin">
+        <button onclick="login()">Login</button>
+
+    </div>
+    <br>
+    <br>
+    <br>
+
     <h2>SMS</h2>
 
     <div>
-        <ul userId="sms"></ul>
+        <ul id="sms"></ul>
     </div>
 
 <script src="script.js"></script>
