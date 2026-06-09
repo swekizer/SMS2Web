@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since this is a stateless REST API
                 .cors(Customizer.withDefaults()) // Enable CORS integration so your frontend config is respected
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/sms").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/sms").permitAll()
                         .requestMatchers(HttpMethod.GET, "/sms").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/sms/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()

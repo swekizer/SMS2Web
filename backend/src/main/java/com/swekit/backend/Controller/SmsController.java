@@ -45,9 +45,12 @@ public class SmsController {
 
     @PostMapping("/sms")
     public Sms addSms(@RequestBody SmsRequest smsRequest){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User currentUser = userRepository.findByEmail(email).orElse(null);
-        return smsService.addSms(smsRequest, currentUser);
+        String code = smsRequest.getSyncCode();
+        User currentUser = userRepository.findBySyncCode(code).orElse(null);
+        if (currentUser != null) {
+            return smsService.addSms(smsRequest, currentUser);
+        } else {
+            throw new RuntimeException("Invalid Sync Code!");
+        }
     }
 }

@@ -6,6 +6,7 @@ public class SmsRequest {
     private LocalDateTime receivedAt;
     private String sender;
     private String message;
+    private String syncCode;
 
 
     public SmsRequest(){
@@ -41,5 +42,13 @@ public class SmsRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSyncCode() {
+        return syncCode;
+    }
+
+    public void setSyncCode(String syncCode) {
+        this.syncCode = syncCode;
     }
 }

@@ -1,5 +1,6 @@
 const API_URL = "https://sms2web.onrender.com/sms";
 const REGISTER_URL = "https://sms2web.onrender.com/register";
+const ME_URL = "https://sms2web.onrender.com/me";
 
 let currentEmail = "";
 let currentPassword = "";
@@ -54,6 +55,30 @@ async function login() {
     
     // Test the credentials by trying to fetch SMS
     await fetchData();
+    // Fetch and display the sync code
+    await fetchSyncCode();
+}
+
+async function fetchSyncCode() {
+    const authHeader = getAuthHeader();
+    if (!authHeader) return;
+    
+    try {
+        const response = await fetch(ME_URL, {
+            method: 'GET',
+            headers: {
+                'Authorization': authHeader
+            }
+        });
+
+        if (response.ok) {
+            const userData = await response.json();
+            document.getElementById("syncCodeDisplay").textContent = userData.syncCode;
+            document.getElementById("syncCodeContainer").style.display = "block";
+        }
+    } catch (error) {
+        console.error("Error fetching sync code:", error);
+    }
 }
 
 async function fetchData() {

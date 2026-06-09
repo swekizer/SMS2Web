@@ -16,14 +16,18 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(unique = true)
+    private String syncCode;
+
     public User(){
 
     }
 
-    public User(String email, String password){
+    public User(String email, String password, String syncCode){
 
         this.email = email;
         this.password = password;
+        this.syncCode = syncCode;
     }
 
     public int getUserId() {
@@ -48,5 +52,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSyncCode() {
+        return syncCode;
+    }
+
+    public void setSyncCode(String syncCode) {
+        this.syncCode = syncCode;
     }
 }
