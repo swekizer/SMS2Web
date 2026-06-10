@@ -4,6 +4,7 @@ const ME_URL = "https://sms2web.onrender.com/me";
 
 let currentEmail = "";
 let currentPassword = "";
+let pollInterval = null;
 
 function getAuthHeader() {
     if (!currentEmail || !currentPassword) return null;
@@ -57,6 +58,10 @@ async function login() {
     await fetchData();
     // Fetch and display the sync code
     await fetchSyncCode();
+    
+    // Start Short Polling every 3 seconds
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(fetchData, 3000);
 }
 
 async function fetchSyncCode() {
