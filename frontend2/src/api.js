@@ -1,4 +1,4 @@
-const BASE_URL = 'https://sms2web.onrender.com/'; // Change to match backend if deployed
+const BASE_URL = 'https://sms2web.onrender.com'; // Change to match backend if deployed
 
 const getAuthHeader = () => {
   const token = localStorage.getItem('auth_token');
