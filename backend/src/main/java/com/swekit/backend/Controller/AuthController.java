@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"https://sms-2-web.vercel.app"})
+@CrossOrigin(origins = {"https://sms-2-web.vercel.app", "https://sms-2-web-abcn.vercel.app"})
 
 @RestController
 public class AuthController {
