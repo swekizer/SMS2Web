@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "https://sms-2-web.vercel.app/")
+@CrossOrigin(origins = "https://sms-2-web.vercel.app")
 
 @RestController
 public class SmsController {

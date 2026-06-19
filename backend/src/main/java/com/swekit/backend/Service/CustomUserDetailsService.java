@@ -28,7 +28,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .roles("USER") // We give everyone the basic USER role for now
                 .build();
     }
-
-
-
 }
